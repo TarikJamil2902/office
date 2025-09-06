@@ -1,15 +1,16 @@
 package com.eleven.office.entity;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +26,11 @@ public class Product {
     private String material;
     private String features;
     private String description;
+    @Lob
+    private byte[] image; // For storing image data as a byte array
+    private boolean isNew;
+    private List<Object> specifications;
+
 
     // Getters and setters
 
@@ -114,6 +120,30 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setNew(boolean aNew) {
+        isNew = aNew;
+    }
+
+    public List<Object> getSpecifications() {
+        return specifications;
+    }
+
+    public void setSpecifications(List<Object> specifications) {
+        this.specifications = specifications;
     }
 
     @Override

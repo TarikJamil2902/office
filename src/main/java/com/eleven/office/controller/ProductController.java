@@ -7,8 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -27,7 +28,7 @@ public class ProductController {
     @GetMapping
     public List<Product> getAllProducts() {
         List<Product> products = service.getAll();
-        logger.info("Fetched all products: count = {}", products.size());
+        System.out.println(products);
         return products;
     }
 
@@ -57,4 +58,23 @@ public class ProductController {
         service.delete(id);
         logger.info("Deleted product ID {}", id);
     }
+
+    @PutMapping("/{id}/image")
+    public Product updateProductImage(@PathVariable Long id, @RequestBody String base64Image) {
+        Product product = service.getById(id);
+    
+        // Remove the data:image/jpeg;base64, prefix if present
+        if (base64Image.startsWith("data:image")) {
+            base64Image = base64Image.substring(base64Image.indexOf(",") + 1);
+        }
+    
+        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+        product.setImage(imageBytes); // Your Product class must use byte[]
+        
+        Product updated = service.update(id, product);
+        logger.info("Updated product image ID {}: {}", id, updated);
+        return updated;
+    }
+    
+    
 }
